@@ -90,7 +90,7 @@ adb-broadcast-sender/
    ```
 
 2. **Access the web interface**:
-   - Open your browser and go to: `http://localhost:8080`
+   - Open your browser and go to: `http://localhost:18088`
    - The application will automatically open the browser for you
 
 3. **Connect Android device**:

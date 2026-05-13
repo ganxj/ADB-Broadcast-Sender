@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger on version tags like v1.0.0
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v5
+      with:
+        go-version: '1.21'
+
+    - name: Install dependencies
+      run: go mod download
+
+    - name: Run tests
+      run: go test ./...
+
+    - name: Build for Windows
+      run: |
+        $env:CGO_ENABLED = "0"
+        go build -ldflags="-s -w" -o adb-broadcast-sender.exe ./cmd/adb-broadcast-sender
+
+    - name: Create release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          adb-broadcast-sender.exe
+          README.md
+          LICENSE
+        generate_release_notes: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

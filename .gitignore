@@ -49,3 +49,6 @@ config.json
 adb-broadcast-sender.log
 test_c.exe
 walk_test.exe
+
+# Claude Code configuration
+.claude/
