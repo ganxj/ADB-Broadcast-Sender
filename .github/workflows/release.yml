@@ -9,9 +9,15 @@ jobs:
   build:
     runs-on: windows-latest
 
+    # 添加权限设置
+    permissions:
+      contents: write  # 允许创建和更新Release
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0  # 获取完整历史，用于生成发布说明
 
     - name: Set up Go
       uses: actions/setup-go@v5
