@@ -1,13 +1,14 @@
 # ADB Broadcast Sender
 
-A Windows desktop application written in Go for sending broadcast intents to Android devices via ADB.
+A Windows application written in Go for sending broadcast intents to Android devices via ADB. The application provides a web-based interface accessible through your browser.
 
 ## Features
 
 - **ADB Connection Management**: Show connected devices, establish WiFi connections
 - **Broadcast Sending**: Send broadcast intents to selected devices
 - **Configuration**: Customize ADB path and application settings
-- **Modern GUI**: Clean, intuitive Windows interface using Fyne framework
+- **Web Interface**: Modern web-based interface accessible via browser
+- **Real-time Updates**: Server-Sent Events for live device status updates
 
 ## Prerequisites
 
@@ -33,7 +34,7 @@ A Windows desktop application written in Go for sending broadcast intents to And
 # Install dependencies
 make deps
 
-# Build the application
+# Build the application (disables CGO to avoid build issues)
 make build
 
 # Run the application
@@ -45,7 +46,8 @@ make test
 
 ### Using Go commands directly:
 ```bash
-# Build for Windows
+# Build for Windows (disable CGO to avoid build issues)
+set CGO_ENABLED=0
 go build -o adb-broadcast-sender.exe ./cmd/adb-broadcast-sender
 
 # Run the application
@@ -60,28 +62,55 @@ go test ./...
 ```
 adb-broadcast-sender/
 ├── cmd/
-│   └── adb-broadcast-sender/
-│       └── main.go          # Application entry point
+│   ├── adb-broadcast-sender/
+│   │   └── main.go          # Web application entry point (HTTP server)
+│   └── test-cli/
+│       └── main.go          # CLI tool for ADB connectivity testing
 ├── internal/
-│   ├── models/              # Data models (Device, Broadcast)
+│   ├── models/              # Data models (Device, Broadcast) with tests
 │   ├── config/              # Configuration management
 │   ├── adb/                 # ADB integration layer
 │   └── app/                 # Business logic layer
-├── pkg/                     # Public packages (if needed)
-├── config/                  # Configuration files
 ├── go.mod                   # Go module definition
 ├── go.sum                   # Dependency checksums
 ├── Makefile                 # Build automation
-└── README.md                # This file
+├── README.md                # This file
+└── verify_models.md         # Model validation status
 ```
 
 ## Usage
 
-1. Launch the application
-2. Connect Android device via USB or WiFi
-3. Select device from the device list
-4. Enter broadcast content
-5. Click "Send Broadcast" to send to selected device
+1. **Launch the application**:
+   ```bash
+   # Build and run
+   make build && ./adb-broadcast-sender.exe
+   
+   # Or run directly
+   go run ./cmd/adb-broadcast-sender
+   ```
+
+2. **Access the web interface**:
+   - Open your browser and go to: `http://localhost:8080`
+   - The application will automatically open the browser for you
+
+3. **Connect Android device**:
+   - Connect device via USB or WiFi
+   - Click "Refresh" to see connected devices
+
+4. **Send broadcast**:
+   - Select a device from the device list
+   - Enter broadcast content
+   - Click "Send Broadcast" to send to selected device
+
+### Troubleshooting
+
+**Port 8080 already in use**:
+If you see "bind: Only one usage of each socket address" error, port 8080 is already in use. You can:
+1. Stop the other application using port 8080
+2. Or modify the port in `cmd/adb-broadcast-sender/main.go` line 84
+
+**ADB not found**:
+Ensure ADB is installed and in your PATH. Default path: `D:\Program Files\Android\SDK\platform-tools\adb.exe`
 
 ## Configuration
 

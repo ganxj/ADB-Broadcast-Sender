@@ -2,9 +2,9 @@
 
 .PHONY: build run test clean
 
-# Build the application for Windows
+# Build the application for Windows (disable CGO to avoid build issues)
 build:
-	go build -o adb-broadcast-sender.exe ./cmd/adb-broadcast-sender
+	set CGO_ENABLED=0 && go build -o adb-broadcast-sender.exe ./cmd/adb-broadcast-sender
 
 # Run the application
 run:
