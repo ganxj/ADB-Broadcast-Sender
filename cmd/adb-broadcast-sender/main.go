@@ -81,7 +81,7 @@ func main() {
 	http.HandleFunc("/api/events", server.handleEvents)
 
 	// Start server
-	port := 8080
+	port := 18088
 	url := fmt.Sprintf("http://localhost:%d", port)
 	log.Printf("Starting server on %s", url)
 
@@ -521,7 +521,7 @@ const indexHTML = `<!DOCTYPE html>
                     </div>
                     <div class="form-group" style="flex: 0 0 120px;">
                         <label for="wifiPort">Port:</label>
-                        <input type="text" id="wifiPort" value="5555" placeholder="5555">
+                        <input type="text" id="wifiPort" value="35646" placeholder="35646">
                     </div>
                 </div>
                 <button class="btn btn-success" onclick="connectWiFi()">Connect</button>
@@ -543,9 +543,9 @@ const indexHTML = `<!DOCTYPE html>
             <div class="quick-content-section" style="margin-bottom: 15px;">
                 <h3 style="margin-bottom: 10px; font-size: 14px; color: #1976D2;">Quick Content</h3>
                 <div class="quick-content-buttons" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
-                    <button class="btn-quick" onclick="setQuickContent('Test QR Code')">Test QR Code</button>
-                    <button class="btn-quick" onclick="setQuickContent('1234567890')">Test Numbers</button>
-                    <button class="btn-quick" onclick="setQuickContent('ABCDEFG')">Test Letters</button>
+                    <button class="btn-quick" onclick="setQuickContent('{&quot;dock&quot;:&quot;D-1&quot;}')">{"dock":"D-1"}</button>
+                    <button class="btn-quick" onclick="setQuickContent('{&quot;dock&quot;:&quot;D-7&quot;}')">{"dock":"D-7"}</button>
+                    <button class="btn-quick" onclick="setQuickContent('{&quot;dock&quot;:&quot;D-8&quot;}')">{"dock":"D-8"}</button>
                     <button class="btn-quick" onclick="setQuickContent('https://example.com')">Test URL</button>
                     <button class="btn-quick" onclick="setQuickContent('{&quot;code&quot;:&quot;12345&quot;,&quot;type&quot;:&quot;qr&quot;}')">Test JSON</button>
                 </div>

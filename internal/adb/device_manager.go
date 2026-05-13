@@ -3,6 +3,7 @@ package adb
 import (
 	"context"
 	"fmt"
+	"os/exec"
 	"strings"
 	"sync"
 	"time"
@@ -103,24 +104,40 @@ func (dm *DeviceManager) RefreshDevices() error {
 
 // ConnectWiFi connects to a device via WiFi
 func (dm *DeviceManager) ConnectWiFi(ip string, port int) error {
-	err := dm.client.Connect(ip, port)
+	// Execute adb connect command
+	cmd := exec.Command(dm.adbPath, "connect", fmt.Sprintf("%s:%d", ip, port))
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to connect to %s:%d: %w", ip, port, err)
+		return fmt.Errorf("failed to execute adb connect: %w, output: %s", err, string(output))
 	}
 
-	// Refresh device list after connecting
-	return dm.RefreshDevices()
+	// Check if connection was successful
+	outputStr := string(output)
+	if strings.Contains(outputStr, "connected to") || strings.Contains(outputStr, "already connected") {
+		// Refresh device list after connecting
+		return dm.RefreshDevices()
+	}
+
+	return fmt.Errorf("adb connect failed: %s", outputStr)
 }
 
 // DisconnectWiFi disconnects from a WiFi device
 func (dm *DeviceManager) DisconnectWiFi(ip string, port int) error {
-	err := dm.client.Disconnect(ip, port)
+	// Execute adb disconnect command
+	cmd := exec.Command(dm.adbPath, "disconnect", fmt.Sprintf("%s:%d", ip, port))
+	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("failed to disconnect from %s:%d: %w", ip, port, err)
+		return fmt.Errorf("failed to execute adb disconnect: %w, output: %s", err, string(output))
 	}
 
-	// Refresh device list after disconnecting
-	return dm.RefreshDevices()
+	// Check if disconnection was successful
+	outputStr := string(output)
+	if strings.Contains(outputStr, "disconnected") || strings.Contains(outputStr, "not connected") {
+		// Refresh device list after disconnecting
+		return dm.RefreshDevices()
+	}
+
+	return fmt.Errorf("adb disconnect failed: %s", outputStr)
 }
 
 // GetDevices returns all connected devices
