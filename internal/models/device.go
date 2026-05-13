@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"errors"
+	"strconv"
 	"time"
 )
 
@@ -101,7 +102,7 @@ func (d *Device) GetDisplayName() string {
 // GetConnectionInfo returns connection information string
 func (d *Device) GetConnectionInfo() string {
 	if d.Connection == "wifi" {
-		return "WiFi: " + d.IPAddress + ":" + string(rune(d.Port))
+		return "WiFi: " + d.IPAddress + ":" + strconv.Itoa(d.Port)
 	}
 	return "USB"
 }
